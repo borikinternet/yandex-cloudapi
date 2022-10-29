@@ -28,7 +28,7 @@ foreach (_f ${ALL_PROTO_FILES})
             -I "${CMAKE_CURRENT_SOURCE_DIR}"
             --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
             "${_f}"
-            DEPENDS "${_f}"
+            DEPENDS "${_f}" protobuf::protoc gRPC::grpc_cpp_plugin
     )
     list(APPEND CPP_PROTO_FILES "${_f_name_h}" "${_f_name_cpp}" "${_f_name_grpc_h}" "${_f_name_grpc_cpp}")
 endforeach ()
