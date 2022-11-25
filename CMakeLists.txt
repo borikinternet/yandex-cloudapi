@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION "3.0")
 
 project("yandex-cloudapi-protobuf")
 
+set(CMAKE_CXX_STANDARD 14)
+
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${Protobuf_VERSION}")
 
@@ -37,3 +39,4 @@ add_library(yandex_cloudapi_obj STATIC ${CPP_PROTO_FILES})
 target_include_directories(yandex_cloudapi_obj
         PRIVATE ${Protobuf_INCLUDE_DIRS}
         PUBLIC ${PROJECT_BINARY_DIR})
+target_compile_options(yandex_cloudapi_obj PRIVATE -fPIC)
