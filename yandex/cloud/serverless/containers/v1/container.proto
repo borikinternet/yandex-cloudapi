@@ -114,6 +114,9 @@ message Revision {
 
   // Options for logging from the container.
   LogOptions log_options = 15;
+
+  // S3 mounts to be used by the version.
+  repeated S3Mount s3_mounts = 16;
 }
 
 // Revision image specification.
@@ -158,7 +161,7 @@ message Args {
 // Resources allocated to a revision.
 message Resources {
   // Amount of memory available to the revision, specified in bytes.
-  int64 memory = 1 [(value) = "134217728-8589934592"];
+  int64 memory = 1 [(value) = "134217728-4294967296"];
 
   // Number of cores available to the revision.
   int64 cores = 2 [(value) = "0-1"];
@@ -197,7 +200,7 @@ message Connectivity {
   // The list of subnets (from the same network) the revision can be attached to.
   //
   // Deprecated, it is sufficient to specify only network_id, without the list of subnet_ids.
-  repeated string subnet_ids = 2;
+  repeated string subnet_ids = 2  [(length) = ">0", (unique) = true];
 }
 
 message LogOptions {
@@ -228,4 +231,18 @@ message ScalingPolicy {
   // Upper limit of requests count in each zone.
   // 0 means no limit.
   int64 zone_requests_limit = 2;
+}
+
+message S3Mount {
+  // S3 bucket name for mounting.
+  string bucket_id = 1 [(required) = true, (length) = "3-63", (pattern) = "[-.0-9a-zA-Z]*"];
+
+  // S3 bucket prefix for mounting.
+  string prefix = 2;
+
+  // Mount point directory name (not path) for mounting.
+  string mount_point_name = 3 [(required) = true, (length) = "1-100", (pattern) = "[-_0-9a-zA-Z]*"];
+
+  // Is mount read only.
+  bool read_only = 4;
 }
