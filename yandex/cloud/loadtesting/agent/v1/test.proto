@@ -22,12 +22,15 @@ message Test {
     STOPPING = 9;
     STOPPED = 10;
     AUTOSTOPPED = 11;
+    WAITING = 12;
+    DELETING = 13;
   }
 
   enum Generator {
     GENERATOR_UNSPECIFIED = 0;
     PANDORA = 1;
     PHANTOM = 2;
+    JMETER = 3;
   }
 
   string id = 1;

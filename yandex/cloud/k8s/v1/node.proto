@@ -54,6 +54,10 @@ message Node {
     // Node is still registered but its instance
     // is deleted (this is our bug).
     MISSING = 5;
+    // Node is stopped
+    STOPPED            = 6;
+    // Backend request to kubernetes api was unsuccessful.
+    UNKNOWN            = 7;
   }
 
   // Node specification.
@@ -206,6 +210,14 @@ message NodeTemplate {
   }
 
   ContainerNetworkSettings container_network_settings = 16;
+
+  // GPU settings
+  GpuSettings gpu_settings = 18;
+}
+
+message GpuSettings {
+  // GPU cluster id, that mk8s node will join.
+  string gpu_cluster_id = 1;
 }
 
 message NetworkInterfaceSpec {

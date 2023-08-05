@@ -192,6 +192,17 @@ service InstanceService {
       response: "Instance"
     };
   }
+
+  // Moves the specified instance to another availability zone
+  //
+  // Running instance will be restarted during this operation.
+  rpc Relocate(RelocateInstanceRequest) returns (operation.Operation) {
+    option (google.api.http) = { post: "/compute/v1/instances/{instance_id}:relocate" body: "*" };
+      option (yandex.cloud.api.operation) = {
+          metadata: "RelocateInstanceMetadata"
+          response: "Instance"
+      };
+  }
 }
 
 enum InstanceView {
@@ -230,11 +241,19 @@ message ListInstancesRequest {
   string page_token = 3 [(length) = "<=100"];
 
   // A filter expression that filters resources listed in the response.
-  // The expression must specify:
-  // 1. The field name. Currently you can use filtering only on the [Instance.name] field.
-  // 2. An `=` operator.
-  // 3. The value in double quotes (`"`). Must be 3-63 characters long and match the regular expression `[a-z]([-a-z0-9]{,61}[a-z0-9])?`.
+  // The expression consists of one or more conditions united by `AND` operator: `<condition1> [AND <condition2> [<...> AND <conditionN>]]`.
+  //
+  // Each condition has the form `<field> <operator> <value>`, where:
+  // 1. `<field>` is the field name. Currently you can use filtering only on the limited number of fields.
+  // 2. `<operator>` is a logical operator, one of `=`, `!=`, `IN`, `NOT IN`.
+  // 3. `<value>` represents a value.
+  // String values should be written in double (`"`) or single (`'`) quotes. C-style escape sequences are supported (`\"` turns to `"`, `\'` to `'`, `\\` to backslash).
   string filter = 4 [(length) = "<=1000"];
+
+  // By which column the listing should be ordered and in which direction,
+  // format is "createdAt desc". "id asc" if omitted.
+  // The default sorting order is ascending
+  string order_by = 5 [(length) = "<=100"];
 }
 
 message ListInstancesResponse {
@@ -843,6 +862,29 @@ message MoveInstanceMetadata {
 
   // ID of the folder that the instance is being moved to.
   string destination_folder_id = 3;
+}
+
+message RelocateInstanceRequest {
+  // ID of the instance to move.
+  //
+  // To get the instance ID, make a [InstanceService.List] request.
+  string instance_id = 1 [(required) = true, (length) = "<=50"];
+
+  // ID of the availability zone to move the instance to.
+  //
+  // To get the zone ID, make a [ZoneService.List] request.
+  string destination_zone_id = 2 [(required) = true, (length) = "<=50"];
+}
+
+message RelocateInstanceMetadata {
+  // ID of the instance that is being moved.
+  string instance_id = 1;
+
+  // ID of the availability zone that the instance is being moved from.
+  string source_zone_id = 2;
+
+  // ID of the availability zone that the instance is being moved to.
+  string destination_zone_id = 3;
 }
 
 message GuestStopInstanceMetadata {
