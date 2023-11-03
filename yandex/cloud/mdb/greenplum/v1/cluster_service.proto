@@ -15,6 +15,7 @@ import "yandex/cloud/mdb/greenplum/v1/maintenance.proto";
 import "yandex/cloud/mdb/greenplum/v1/config.proto";
 import "yandex/cloud/mdb/greenplum/v1/host.proto";
 import "yandex/cloud/mdb/greenplum/v1/backup.proto";
+import "yandex/cloud/mdb/greenplum/v1/pxf.proto";
 
 option go_package = "github.com/yandex-cloud/go-genproto/yandex/cloud/mdb/greenplum/v1;greenplum";
 option java_package = "yandex.cloud.api.mdb.greenplum.v1";
@@ -231,6 +232,9 @@ message CreateClusterRequest {
 
   // Configuration of Greenplum® and Odyssey®.
   ConfigSpec config_spec = 20;
+
+  // Cloud storage settings
+  CloudStorage cloud_storage = 21;
 }
 
 // Configuration of Greenplum® and Odyssey®.
@@ -241,10 +245,15 @@ message ConfigSpec {
     GreenplumConfig6_19 greenplum_config_6_19 = 2 [json_name="greenplumConfig_6_19"];
     GreenplumConfig6_21 greenplum_config_6_21 = 4 [json_name="greenplumConfig_6_21"];
     GreenplumConfig6_22 greenplum_config_6_22 = 5 [json_name="greenplumConfig_6_22"];
+    GreenplumConfig6 greenplum_config_6 = 9 [json_name="greenplumConfig_6"];
   }
 
   // Odyssey® pool settings.
   ConnectionPoolerConfig pool = 3;
+
+  BackgroundActivitiesConfig background_activities = 6;
+
+  PXFConfig pxf_config = 8;
 }
 
 message CreateClusterMetadata {
@@ -296,6 +305,9 @@ message UpdateClusterRequest {
 
   // Settings of the Greenplum® cluster.
   ConfigSpec config_spec = 19;
+
+  // Cloud storage settings
+  CloudStorage cloud_storage = 20;
 }
 
 message UpdateClusterMetadata {

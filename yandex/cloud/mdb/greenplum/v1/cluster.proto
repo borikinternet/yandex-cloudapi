@@ -3,12 +3,14 @@ syntax = "proto3";
 package yandex.cloud.mdb.greenplum.v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 import "google/type/timeofday.proto";
 
 import "yandex/cloud/validation.proto";
 
 import "yandex/cloud/mdb/greenplum/v1/config.proto";
 import "yandex/cloud/mdb/greenplum/v1/maintenance.proto";
+import "yandex/cloud/mdb/greenplum/v1/pxf.proto";
 
 option go_package = "github.com/yandex-cloud/go-genproto/yandex/cloud/mdb/greenplum/v1;greenplum";
 option java_package = "yandex.cloud.api.mdb.greenplum.v1";
@@ -146,6 +148,9 @@ message Cluster {
 
   // Greenplum® and Odyssey® configuration.
   ClusterConfigSet cluster_config = 24;
+
+  // Cloud storage settings
+  CloudStorage cloud_storage = 26;
 }
 
 message ClusterConfigSet {
@@ -154,10 +159,15 @@ message ClusterConfigSet {
     GreenplumConfigSet6_19 greenplum_config_set_6_19 = 2 [json_name="greenplumConfigSet_6_19"];
     GreenplumConfigSet6_21 greenplum_config_set_6_21 = 4 [json_name="greenplumConfigSet_6_21"];
     GreenplumConfigSet6_22 greenplum_config_set_6_22 = 5 [json_name="greenplumConfigSet_6_22"];
+    GreenplumConfigSet6 greenplum_config_set_6 = 9 [json_name="greenplumConfigSet_6"];
   }
 
   // Odyssey® pool settings.
   ConnectionPoolerConfigSet pool = 3;
+
+  BackgroundActivitiesConfig background_activities = 6;
+
+  PXFConfigSet pxf_config = 8;
 }
 
 // Monitoring system metadata.
@@ -182,6 +192,9 @@ message GreenplumConfig {
 
   // Time to start the daily backup, in the UTC timezone.
   google.type.TimeOfDay backup_window_start = 2;
+
+  // Retention policy of automated backups.
+  google.protobuf.Int64Value backup_retain_period_days = 9 [(value) = "1-7"];
 
   // Access policy for external services.
   Access access = 3;
@@ -247,4 +260,10 @@ message RestoreResources {
 
     // Volume of the storage available to a host.
     int64 disk_size = 2;
+}
+
+// Cloud Storage Settings
+message CloudStorage {
+  // enable Cloud Storage for cluster
+  bool enable = 1;
 }
