@@ -3,11 +3,13 @@ syntax = "proto3";
 package yandex.cloud.compute.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/duration.proto";
 import "google/protobuf/field_mask.proto";
 import "yandex/cloud/access/access.proto";
 import "yandex/cloud/api/operation.proto";
 import "yandex/cloud/compute/v1/disk.proto";
 import "yandex/cloud/compute/v1/instance.proto";
+import "yandex/cloud/compute/v1/maintenance.proto";
 import "yandex/cloud/operation/operation.proto";
 import "yandex/cloud/validation.proto";
 
@@ -377,11 +379,17 @@ message CreateInstanceRequest {
   // Network settings.
   NetworkSettings network_settings = 15;
 
-  // GPU settings.
-  GpuSettings gpu_settings = 20;
-  
   // Placement policy configuration.
   PlacementPolicy placement_policy = 16;
+
+  // GPU settings.
+  GpuSettings gpu_settings = 20;
+
+  // Behaviour on maintenance events
+  MaintenancePolicy maintenance_policy = 21;
+
+  // Time between notification via metadata service and maintenance
+  google.protobuf.Duration maintenance_grace_period = 22 [(value) = "1s-24h"];
 }
 
 message CreateInstanceMetadata {
@@ -447,6 +455,12 @@ message UpdateInstanceRequest {
 
   // Scheduling policy configuration.
   SchedulingPolicy scheduling_policy = 12;
+
+  // Behaviour on maintenance events
+  MaintenancePolicy maintenance_policy = 14;
+
+  // Time between notification via metadata service and maintenance
+  google.protobuf.Duration maintenance_grace_period = 15 [(value) = "1s-24h"];
 }
 
 message UpdateInstanceMetadata {
@@ -652,7 +666,7 @@ message RemoveInstanceOneToOneNatMetadata {
 }
 
 message UpdateInstanceNetworkInterfaceRequest {
-  // ID of the network interface that is being updated.
+  // ID of the instance that is being updated.
   string instance_id = 1 [(required) = true];
 
   // The index of the network interface to be updated.
@@ -905,6 +919,12 @@ message RelocateInstanceRequest {
   // to interact with other services on the internal network and on the internet.
   // Currently only one network interface is supported per instance.
   repeated NetworkInterfaceSpec network_interface_specs = 3 [(size) = "1", (required) = true];
+
+  // Boot disk placement policy configuration in target zone. Must be specified if disk has placement policy.
+  DiskPlacementPolicy boot_disk_placement = 4;
+
+  // Secondary disk placement policy configurations in target zone. Must be specified for each disk that has placement policy.
+  repeated DiskPlacementPolicyChange secondary_disk_placements = 5;
 }
 
 message RelocateInstanceMetadata {
