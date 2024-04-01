@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION "3.0")
 
 project("yandex-cloudapi-protobuf")
 
+set(CMAKE_PREFIX_PATH "~/.local;${CMAKE_SYSTEM_PREFIX_PATH}")
+
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${Protobuf_VERSION}")
 
@@ -43,6 +45,7 @@ if (NOT DEFINED LANG OR "${LANG}" STREQUAL "CPP")
     add_library(yandex_cloudapi_obj STATIC ${CPP_PROTO_FILES})
     target_include_directories(yandex_cloudapi_obj
             PRIVATE ${Protobuf_INCLUDE_DIRS}
+                    "~/.local/include"
             PUBLIC ${PROJECT_BINARY_DIR})
     target_compile_options(yandex_cloudapi_obj PRIVATE -fPIC)
 elseif ("${LANG}" STREQUAL  "GO")
