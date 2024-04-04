@@ -3,12 +3,13 @@ syntax = "proto3";
 package yandex.cloud.ai.foundation_models.v1;
 
 import "google/api/annotations.proto";
-import "yandex/cloud/ai/foundation_models/v1/foundation_models.proto";
+import "yandex/cloud/ai/foundation_models/v1/text_common.proto";
 import "yandex/cloud/api/operation.proto";
 import "yandex/cloud/operation/operation.proto";
 
-option go_package = "github.com/yandex-cloud/go-genproto/yandex/cloud/ai/foundation_models/v1;foundation_models";
+option go_package = "github.com/yandex-cloud/go-genproto/yandex/cloud/ai/foundation_models/v1/text_generation;foundation_models";
 option java_package = "yandex.cloud.api.ai.foundation_models.v1";
+
 
 // Request for the service to generate text completion.
 message CompletionRequest {
@@ -34,6 +35,7 @@ message CompletionResponse {
   string model_version = 3;
 }
 
+
 // Service for text generation.
 service TextGenerationService {
   // RPC method for generating text completions.
@@ -52,6 +54,7 @@ service TextGenerationAsyncService {
     option (google.api.http) = {post: "/foundationModels/v1/completionAsync" body: "*"};
   }
 }
+
 
 // Request for the service to tokenize input text.
 message TokenizeRequest {
@@ -80,34 +83,5 @@ service TokenizerService {
   // RPC method for tokenizing content of CompletionRequest
   rpc TokenizeCompletion (CompletionRequest) returns (TokenizeResponse) {
     option (google.api.http) = {post: "/foundationModels/v1/tokenizeCompletion" body: "*"};
-  }
-}
-
-// Request for the service to obtain text embeddings.
-message TextEmbeddingRequest {
-  // The identifier of the model to be used for obtaining text embeddings.
-  string model_uri = 1;
-
-  // The input text for which the embedding is requested.
-  string text = 2;
-}
-
-// Response containing generated text embedding.
-message TextEmbeddingResponse {
-  // A repeated list of double values representing the embedding.
-  repeated double embedding = 1;
-
-  // The number of tokens in the input text.
-  int64 num_tokens = 2;
-
-  // Model version (changes with model releases).
-  string model_version = 3;
-}
-
-// Service for obtaining embeddings from input data.
-service EmbeddingsService {
-  // RPC method for obtaining embeddings from text data.
-  rpc TextEmbedding (TextEmbeddingRequest) returns (TextEmbeddingResponse) {
-    option (google.api.http) = {post: "/foundationModels/v1/textEmbedding" body: "*"};
   }
 }
