@@ -7,6 +7,9 @@ set(CMAKE_PREFIX_PATH "~/.local;${CMAKE_SYSTEM_PREFIX_PATH}")
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${Protobuf_VERSION}")
 
+find_package(absl CONFIG REQUIRED)
+message(STATUS "Using absl ${absl_VERSION}")
+
 find_package(gRPC CONFIG REQUIRED)
 message(STATUS "Using gRPC ${gRPC_VERSION}")
 
